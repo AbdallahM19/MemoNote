@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Note Landing Page</title>
+    <link rel="icon" href="../static/uploads/icon-site.png" type="img">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/web_and_share_css/landingpage.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/web-page">Memory Note</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            More Options
+                        </a>
+                        <div class="dropdown-menu bc" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/login">Login</a>
+                            <a class="dropdown-item" href="/register">Register</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Help Center</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 ">
+                <div class="header">
+                    <h1 class="h1 text-center text-primary ali" id="MemoryKeeper">Welcome to Memory Note Page</h1>
+                    <p class="lead text-center">Store, organize, and share your cherished memories securely.</p>
+                </div>
+
+                <div class="container margintop">
+                    <div class="row home">
+                        <div class="col-6 col-sm-4 memo">
+                            <span class="text-primary h3">Project Overview:</span>
+                            Memory Keeper is a web-based application designed to help users store, organize, and share their personal memories.
+                            The platform provides a secure and user-friendly interface
+                             <!-- user-friendly interface where users can create, manage, and revisit their cherished memories at any time. -->
+                        </div>
+                        <div class="col-6 col-sm-4">
+                            <img src="../static/web_images/download.jfif" alt="memory image" class="pic rounded-5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container p-5" id="services">
+                    <h2 class="text-center py-3 text-primary">Our Services</h2>
+                    <div class="row mar">
+                        <div class="col-lg-4">
+                            <h4>Memory Sharing</h4>
+                            <p class="justify-content-center">Our platform uses state-of-the-art encryption to keep your memories safe. Users have full control over who can view, edit, or share their memories, ensuring privacy at every step.</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <h4>Privacy and Security</h4>
+                            <p>Regular health check-ups are essential for maintaining your pet's well-being. Our thorough examinations include a detailed assessment of your pet's overall health, early detection of potential issues, and personalized recommendations for preventive care.</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <h4>Customization Options</h4>
+                            <p>Personalize the appearance of albums and timelines to suit your style. Choose themes, layouts, and color schemes to make your memory collection truly unique.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container py-5" id="contact">
+                    <h2 class="text-center text-primary">Contact Us</h2>
+                    <p class="text-center">Have questions or need assistance? Contact us!</p>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <form>
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" autocomplete="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" autocomplete="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="3" placeholder="Enter your message" autocomplete="off"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 pt-2 mt-2">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <!-- <script type="module" src="../static/home.js"></script> -->
+                <!-- <script type="module" src src="../static/search.js"></script> -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
