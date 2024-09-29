@@ -33,7 +33,10 @@ class Users():
         """returns all users in the database"""
         result = self.sess.query(User).all()
         self.sess.close()
-        return result
+        return [
+            self.convert_object_to_dict_user(user)
+            for user in result
+        ]
 
     def get_user_by_username(self, username):
         """get user by username function"""
@@ -41,7 +44,7 @@ class Users():
             User.username == username
         ).first()
         self.sess.close()
-        return user
+        return self.convert_object_to_dict_user(user)
 
     def get_user_by_id(self, user_id):
         """get user by id function"""
@@ -49,7 +52,7 @@ class Users():
             User.id == user_id
         ).first()
         self.sess.close()
-        return user
+        return self.convert_object_to_dict_user(user)
 
     def get_user_by_session_id(self, session_id):
         """get user by session id function"""
@@ -57,7 +60,7 @@ class Users():
             User.session_id == session_id
         ).first()
         self.sess.close()
-        return user
+        return self.convert_object_to_dict_user(user)
 
     def get_users_for_search(self, query):
         """get users for search function"""

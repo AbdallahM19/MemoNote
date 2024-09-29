@@ -14,17 +14,9 @@ def get_memories(memory_id=None):
     if memory_id:
         memory = memories_module.get_memories_by_id(memory_id)
         if memory:
-            return jsonify(
-                memories_module.convert_object_to_dict_memory(memory)
-            )
-        else:
-            return jsonify({"error": "memory not found"}), 404
-
-    memories = memories_module.get_memories()
-    return jsonify([
-        memories_module.convert_object_to_dict_memory(memory)
-        for memory in memories
-    ])
+            return jsonify(memory)
+        return jsonify({"error": "memory not found"}), 404
+    return jsonify(memories_module.get_memories())
 
 
 @memories_bp.route('/query', methods=['GET'])
@@ -50,12 +42,8 @@ def get_memories_user(user_id):
     """get all memories of a user"""
     memories = memories_module.get_memories_for_user(user_id)
     if user_id:
-        memories_list = [
-            memories_module.convert_object_to_dict_memory(memory)
-            for memory in memories
-        ]
         memories_sorted = sorted(
-            memories_list,
+            memories,
             key=lambda x: datetime.strptime(x['timestamp'], '%a %b %d %H:%M:%S %Y'),
             reverse=True
         )
@@ -66,23 +54,14 @@ def get_memories_user(user_id):
 @memories_bp.route('/get-memories', methods=['GET'])
 def get_user_memories():
     """Get memories"""
-    memory_list = []
-    memories = session_db.query(Memory).filter(
-        or_(
-            Memory.user_id == users_module.current_user["id"],
-            Memory.type == 'Public'
-        )
-    ).all()
-    for memory in memories:
-        memory_dict = memories_module.convert_object_to_dict_memory(memory)
-        memory_list.append(memory_dict)
+    memories = memories_module.get_memories(
+        users_module.current_user["id"]
+    )
     memories_sorted = sorted(
-        memory_list,
+        memories,
         key=lambda x: datetime.strptime(x['timestamp'], '%a %b %d %H:%M:%S %Y'),
         reverse=True
     )
-    session_db.close()
-    # print(memories_sorted)
     return jsonify(memories_sorted)
 
 

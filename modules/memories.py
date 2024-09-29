@@ -13,13 +13,24 @@ class Memories():
             Memory.id == memory_id
         ).first()
         self.sess.close()
-        return memory
+        return self.convert_object_to_dict_memory(memory)
 
-    def get_memories(self):
+    def get_memories(self, user_id):
         """get memory by id function"""
-        memories = self.sess.query(Memory).all()
+        if user_id:
+            memories = self.sess.query(Memory).filter(
+                or_(
+                    Memory.user_id == user_id,
+                    Memory.type == 'Public'
+                )
+            ).all()
+        else:
+            memories = self.sess.query(Memory).all()
         self.sess.close()
-        return memories
+        return [
+            self.convert_object_to_dict_memory(memory)
+            for memory in memories
+        ]
 
     def get_memories_for_user(self, user_id):
         """get memory by user_id function"""
@@ -27,7 +38,10 @@ class Memories():
             Memory.user_id == user_id
         ).all()
         self.sess.close()
-        return memories
+        return [
+            self.convert_object_to_dict_memory(memory)
+            for memory in memories
+        ]
 
     def get_memories_for_search(self, query, user_id):
         """get memory by search function"""

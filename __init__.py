@@ -42,9 +42,9 @@ def load_user(func):
         if user:
             users_module.current_user = user
         elif session_id:
-            session_table = get_session()
+            # session_table = get_session()
             user = users_module.convert_object_to_dict_user(
-                session_table.query(User).filter(
+                session_db.query(User).filter(
                     User.session_id == session_id
                 ).first()
             )
@@ -52,7 +52,7 @@ def load_user(func):
                 current_user_id = user['id']
 
                 # loading user followers and followings
-                follow_list = session_table.query(Follower).filter(
+                follow_list = session_db.query(Follower).filter(
                     or_(
                         Follower.user_id == current_user_id,
                         Follower.follower_id == current_user_id
@@ -67,7 +67,7 @@ def load_user(func):
                 ] or []
 
                 # loading user's comments
-                comments = session_table.query(Comment).filter(
+                comments = session_db.query(Comment).filter(
                     Comment.user_id == current_user_id
                 ).all()
                 user['my_comments'] = comments or []
@@ -80,7 +80,7 @@ def load_user(func):
                     "private": []
                 }
 
-                memories = session_table.query(Memory.id, Memory.type).filter(
+                memories = session_db.query(Memory.id, Memory.type).filter(
                     Memory.user_id == current_user_id
                 ).all()
 

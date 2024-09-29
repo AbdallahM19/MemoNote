@@ -11,24 +11,17 @@ users_bp = Blueprint('user', __name__)
 @users_bp.route('/users/<int:user_id>/', methods=['GET'])
 def get_users(user_id=None):
     """get all users data"""
-    if not users_module.current_user:
-        load_data_session_user()
+    # if not users_module.current_user:
+    #     load_data_session_user()
 
     if user_id:
         if users_module.current_user != {} and user_id == users_module.current_user['id']:
             return jsonify(users_module.current_user)
         user = users_module.get_user_by_id(user_id)
         if user:
-            user_dict = users_module.convert_object_to_dict_user(user)
-            return jsonify(user_dict)
-        else:
-            return jsonify({'error': 'User not found'}), 404
-    users_list = []
-    users = users_module.get_all_users()
-    for user in users:
-        user_dict = users_module.convert_object_to_dict_user(user)
-        users_list.append(user_dict)
-    return jsonify(users_list)
+            return jsonify(user)
+        return jsonify({'error': 'User not found'}), 404
+    return jsonify(users_module.get_all_users())
 
 
 @users_bp.route('/current-user', methods=['GET'])
