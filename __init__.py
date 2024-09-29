@@ -12,7 +12,10 @@ import os
 
 users_module = Users()
 memories_module = Memories()
-comment_module = Comments_class()
+comment_module = Comments()
+
+
+session_db = get_session()
 
 
 app = Flask(__name__)
