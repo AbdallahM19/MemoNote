@@ -2,7 +2,7 @@ from datetime import datetime
 from modules.database import Comment, get_session
 
 
-class Comments_class():
+class Comments():
     """Comments"""
 
     def get_comment_by_user_id(self, user_id):

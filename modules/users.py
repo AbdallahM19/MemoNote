@@ -1,12 +1,12 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from modules.database import User, LikeList, Memory, Follower, get_session
-from modules.comments import Comments_class
+from modules.comments import Comments
 from __init__ import or_, and_
 from datetime import datetime
 from uuid import uuid4
 
 
-comment_module = Comments_class()
+comment_module = Comments()
 
 
 class Users():
