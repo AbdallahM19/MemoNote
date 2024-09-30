@@ -94,6 +94,7 @@ def follow_user(user_id):
         )}), 200
 
     elif request.method == 'POST':
+        session_db = get_session()
         user_to_follow = users_module.get_follow_or_following(
             user_id
         )

@@ -15,7 +15,7 @@ class Memories():
         self.sess.close()
         return self.convert_object_to_dict_memory(memory)
 
-    def get_memories(self, user_id):
+    def get_memories(self, user_id=None):
         """get memory by id function"""
         if user_id:
             memories = self.sess.query(Memory).filter(

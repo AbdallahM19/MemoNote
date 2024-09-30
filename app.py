@@ -372,6 +372,7 @@ def upload_images():
         session['user']['image'] = image_url
 
         # update current user image profile
+        session_db = get_session()
         session_db.query(User).filter(
             User.id == user_id
         ).first().image = image_url
@@ -540,6 +541,7 @@ def register():
     try:
         data = request.get_json()
 
+        session_db = get_session()
         existing_user = session_db.query(User).filter(
             or_(
                 User.username == data['username'],
@@ -618,15 +620,15 @@ def  logout():
     return redirect(url_for('login'))
 
 
-@app.errorhandler(Exception)
-def error(e):
-    """error handler"""
-    error_code = 500
-    error_message = "Internal Server Error"
-    if hasattr(e, 'code'):
-        error_code = e.code
-        error_message = e.name
-    return render_template('error.html', error_code=error_code, error_message=error_message), error_code
+# @app.errorhandler(Exception)
+# def error(e):
+#     """error handler"""
+#     error_code = 500
+#     error_message = "Internal Server Error"
+#     if hasattr(e, 'code'):
+#         error_code = e.code
+#         error_message = e.name
+#     return render_template('error.html', error_code=error_code, error_message=error_message), error_code
 
 
 # Register blueprints after defining all routes
@@ -646,9 +648,9 @@ def main():
     # create_database()
     # create_tables()
     app.run(host="127.0.0.1", port=5000, debug=True)
-    session_db.close()
-    users_module.sess.close()
-    memories_module.sess.close()
+    # session_db.close()
+    # users_module.sess.close()
+    # memories_module.sess.close()
     # ----------------------------------------------------
     # print(datetime.now())
     # print(datetime.now().strftime("%H:%M:%S %a %d:%m:%Y"))

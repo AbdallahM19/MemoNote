@@ -48,11 +48,16 @@ class Users():
 
     def get_user_by_id(self, user_id):
         """get user by id function"""
-        user = self.sess.query(User).filter(
-            User.id == user_id
-        ).first()
-        self.sess.close()
-        return self.convert_object_to_dict_user(user)
+        try:
+            user = self.convert_object_to_dict_user(
+                self.sess.query(User).filter(
+                    User.id == user_id
+                ).first()
+            )
+            # print(user)
+            return user
+        finally:
+            self.sess.close()
 
     def get_user_by_session_id(self, session_id):
         """get user by session id function"""

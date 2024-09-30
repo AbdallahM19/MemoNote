@@ -15,7 +15,7 @@ memories_module = Memories()
 comment_module = Comments()
 
 
-session_db = get_session()
+# session_db = get_session()
 
 
 app = Flask(__name__)
@@ -42,7 +42,7 @@ def load_user(func):
         if user:
             users_module.current_user = user
         elif session_id:
-            # session_table = get_session()
+            session_db = get_session()
             user = users_module.convert_object_to_dict_user(
                 session_db.query(User).filter(
                     User.session_id == session_id

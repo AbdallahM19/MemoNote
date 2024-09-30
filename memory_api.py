@@ -54,14 +54,26 @@ def get_memories_user(user_id):
 @memories_bp.route('/get-memories', methods=['GET'])
 def get_user_memories():
     """Get memories"""
+    if not users_module.current_user:
+        load_data_session_user()
+
+    # print('---------------------------------')
+    # print(users_module.current_user)
+    # print(users_module.current_user['id'])
+    # print(users_module.current_user.get('id', None))
+    # print('---------------------------------')
+
     memories = memories_module.get_memories(
-        users_module.current_user["id"]
+        users_module.current_user.get('id', None)
     )
     memories_sorted = sorted(
         memories,
         key=lambda x: datetime.strptime(x['timestamp'], '%a %b %d %H:%M:%S %Y'),
         reverse=True
     )
+    # print(memories_sorted)
+    # for i in memories_sorted:
+    #     print(i['type'])
     return jsonify(memories_sorted)
 
 

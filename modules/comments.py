@@ -1,10 +1,9 @@
-from datetime import datetime
 from modules.database import Comment, get_session
+from datetime import datetime
 
 
 class Comments():
     """Comments"""
-
     def get_comment_by_user_id(self, user_id):
         """Get the first comment of a user by user_id."""
         session = get_session()
