@@ -416,19 +416,19 @@ def home_page():
         )
     elif request.method == 'POST':
         data = request.get_json()
-        new_memory_data = {
-            "user_id": users_module.current_user['id'],
-            "title": data['title'] if data['title'] else datetime.now().strftime("%a %H:%M:%S %d:%m:%Y"),
-            "timestamp": datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
-            "image": data['image'],
-            "description": data['content'],
-            "share": data['share'],
-            "type": data['status'],
-            "calendar": data['calendar'],
-            "liked": 0,
-            "likelist": [],
-            "file": [],
-            "comments": [
+        memories_module.create_new_memory(
+            user_id = users_module.current_user['id'],
+            title = data['title'] if data['title'] else datetime.now().strftime("%a %H:%M:%S %d:%m:%Y"),
+            timestamp = datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
+            image = data['image'],
+            description = data['content'],
+            share = data['share'],
+            type = data['status'],
+            calendar = data['calendar'],
+            liked = 0,
+            likelist = [],
+            file = [],
+            comments = [
                 {
                     "comment_id": "",
                     "user_id": 0,
@@ -436,8 +436,7 @@ def home_page():
                     "timestamp": ""
                 }
             ]
-        }
-        memories_module.create_new_memory(new_memory_data)
+        )
         return jsonify({'message': 'True'})
     elif request.method == 'DELETE':
         return jsonify({'message': 'Home Page - DELETE'})

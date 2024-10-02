@@ -70,7 +70,7 @@ class Memories():
             for memory in memories
         ]
 
-    def create_new_memory(self, new_memory_data):
+    def create_new_memory(self, **new_memory_data):
         """create new memory function"""
         try:
             new_memory = Memory(
