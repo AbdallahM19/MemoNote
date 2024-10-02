@@ -113,8 +113,9 @@ class Memories():
     def delete_memory(self, memory_id):
         """delete memory function"""
         try:
-            memory = self.get_memories_by_id(memory_id)
-            self.sess.delete(memory)
+            self.sess.query(Memory).filter(
+                Memory.id == memory_id
+            ).delete()
 
             self.sess.query(LikeList).filter(
                 LikeList.memory_id == memory_id
