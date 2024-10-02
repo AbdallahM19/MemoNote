@@ -78,7 +78,7 @@ class Users():
             for user in users
         ]
 
-    def create_user_in_table_user(self, user_data):
+    def create_user_in_table_user(self, **user_data):
         """
         create user in table user function
         - Args:
@@ -86,25 +86,29 @@ class Users():
         - Returns:
             - int: The ID of the newly inserted user.
         """
-        user = User(
-            username=user_data['username'],
-            fullname=user_data['fullname'],
-            email=user_data['email'],
-            password=user_data['password'],
-            confirmpass=user_data['confirmpass'],
-            session_id=user_data['session_id'],
-            reset_token=user_data['reset_token'],
-            description=user_data['description'],
-            dob=user_data['dob'],
-            timecreated=user_data['timecreated'],
-            image=user_data['image'],
-            followingcount=user_data['followingcount'],
-            followerscount=user_data['followerscount']
-        )
-        self.sess.add(user)
-        self.sess.commit()
-        self.sess.close()
-        return user.id
+        try:
+            user = User(
+                username=user_data['username'],
+                fullname=user_data['fullname'],
+                email=user_data['email'],
+                password=self.hash_password(user_data['password']),
+                confirmpass=user_data['password'],
+                session_id=str(uuid4()),
+                reset_token="",
+                description="",
+                dob=user_data['dob'],
+                timecreated=datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
+                image="",
+                followingcount=0,
+                followerscount=0
+            )
+
+            self.sess.add(user)
+            self.sess.commit()
+
+            return self.convert_object_to_dict_user(user)
+        finally:
+            self.sess.close()
 
     def update_user_in_table_user(self, user_data):
         """
@@ -142,8 +146,9 @@ class Users():
                 User.email == email
             )
         ).first()
+
         if user:
-            return user
+            return self.convert_object_to_dict_user(user)
         return False
 
     def authenticate_user(self, username, password):
@@ -153,15 +158,13 @@ class Users():
             - (True) if the user is authenticated
             - (False) if the user is not authenticated
         """
-        user = self.check_if_user_exist(
-            username, username
-        )
+        user = self.check_if_user_exist(username, username)
         if user and (
-            self.is_valid(user.password, password) or
-            user.confirmpass == password,
+            self.is_valid(user['password'], password) or
+            user['confirmpass'] == password,
         ):
-            self.current_user = self.convert_object_to_dict_user(user)
-            return self.current_user
+            self.current_user = user
+            return user
         return False
 
     # --------------

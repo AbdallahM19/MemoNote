@@ -540,70 +540,58 @@ def register():
     try:
         data = request.get_json()
 
-        session_db = get_session()
-        existing_user = session_db.query(User).filter(
-            or_(
-                User.username == data['username'],
-                User.email == data['email']
-            )
-        ).first()
+        existing_user = users_module.check_if_user_exist(
+            data['username'], data['email']
+        )
 
         if existing_user:
-            if existing_user.username == data['username']:
+            if existing_user['username'] == data['username']:
                 return {'message': 'username already exists'}, 400
-            if existing_user.email == data['email']:
+            if existing_user['email'] == data['email']:
                 return {'message': 'email already exists'}, 400
 
-        new_user_data = {
-            "fullname": data['fullname'],
-            "username": data['username'],
-            "email": data['email'],
-            "dob": data['dob'],
-            "timecreated": datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
-            "password": users_module.hash_password(data['password']),
-            "confirmpass": data['confirmpass'],
-            "description": "",
-            "session_id": str(uuid4()),
-            "reset_token": "",
-            "image": "",
-            "following": [],
-            "followingcount": 0,
-            "followers": [],
-            "followerscount": 0,
-            "memories": {
-                "public": [],
-                "liked": [],
-                "draft": [],
-                "private": []
-            },
-            "my_comments": []
-        }
-
-        new_user = User(
-            fullname=new_user_data['fullname'],
-            username=new_user_data['username'],
-            email=new_user_data['email'],
-            dob=new_user_data['dob'],
-            timecreated=new_user_data['timecreated'],
-            password=users_module.hash_password(new_user_data['password']),
-            confirmpass=new_user_data['confirmpass'],
-            description=new_user_data['description'],
-            session_id=new_user_data['session_id'],
-            reset_token=new_user_data['reset_token'],
-            image=new_user_data['image'],
-            followingcount=new_user_data['followingcount'],
-            followerscount=new_user_data['followerscount'],
+        new_user = users_module.create_user_in_table_user(
+            username = data['username'],
+            fullname = data['fullname'],
+            email = data['email'],
+            password = data['password'],
+            dob = data['dob'],
         )
-        session_db.add(new_user)
-        session_db.commit()
 
-        user_id = new_user.id
-        new_user_data['id'] = user_id
-        users_module.current_user = new_user_data
-        session['session_id'] = new_user_data['session_id']
-        session['user'] = new_user_data
+        # print('---------------------------------------')
+        # for k, v in new_user.items():
+        #     print("{}: {}".format(k, v))
+        # print('---------------------------------------')
 
-        session_db.close()
+        # new_user = users_module.create_user_in_table_user(
+        #     fullname = data['fullname'],
+        #     username = data['username'],
+        #     email = data['email'],
+        #     dob = data['dob'],
+        #     timecreated = datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
+        #     password = users_module.hash_password(data['password']),
+        #     confirmpass = data['confirmpass'],
+        #     description = "",
+        #     session_id = str(uuid4()),
+        #     reset_token = "",
+        #     image = "",
+        #     following = [],
+        #     followingcount = 0,
+        #     followers = [],
+        #     followerscount = 0,
+        #     memories = {
+        #         "public": [],
+        #         "liked": [],
+        #         "draft": [],
+        #         "private": []
+        #     },
+        #     my_comments = []
+        # )
+
+        users_module.current_user = new_user
+        session['user'] = new_user
+        session['session_id'] = new_user['session_id']
+
         return jsonify({'message': 'Register successful'}), 201
     except Exception as e:
         print("Error occurred:", str(e))

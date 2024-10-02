@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from sqlalchemy import and_, or_
 from functools import wraps
 from sys import modules
-from uuid import uuid4
 from modules import *
 import json
 import os
