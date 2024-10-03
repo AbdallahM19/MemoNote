@@ -94,49 +94,15 @@ def follow_user(user_id):
         )}), 200
 
     elif request.method == 'POST':
-        session_db = get_session()
+        # session_db = get_session()
         user_to_follow = users_module.get_follow_or_following(
             user_id
         )
         if user_to_follow:
-            session_db.delete(user_to_follow)
-
-            session_db.query(User).filter(
-                User.id == users_module.current_user['id']
-            ).first().followingcount -= 1
-
-            session_db.query(User).filter(
-                User.id == user_id
-            ).first().followerscount -= 1
-
-            users_module.current_user['followingcount'] -= 1
-            users_module.current_user['following'].remove(user_id)
-
-            session_db.commit()
-            session_db.close()
-
+            users_module.delete_follow(user_id, user_to_follow)
             save_current_user_data_in_session()
             return jsonify({"message": "Unfollow", "is_following": False}), 200
         else:
-            new_follower = Follower(
-                user_id=users_module.current_user['id'],
-                follower_id=user_id
-            )
-            session_db.add(new_follower)
-
-            session_db.query(User).filter(
-                User.id == users_module.current_user['id']
-            ).first().followingcount += 1
-
-            session_db.query(User).filter(
-                User.id == user_id
-            ).first().followerscount += 1
-
-            users_module.current_user['followingcount'] += 1
-            users_module.current_user['following'].append(user_id)
-
-            session_db.commit()
-            session_db.close()
-
+            users_module.create_new_follow(user_id)
             save_current_user_data_in_session()
             return jsonify({"message": "Follow", "is_following": True}), 200
