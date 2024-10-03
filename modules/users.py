@@ -147,7 +147,7 @@ class Users():
                 User.id == user_id
             ).delete()
 
-            self.delete_follow(user_id)
+            self.delete_all_follow_for_current_user(user_id)
             # self.sess.query(Follower).filter(
             #     or_(
             #         Follower.user_id == user_id,
@@ -281,8 +281,57 @@ class Users():
         self.sess.close()
         return [f.follower_id for f in result] if result else []
 
-    def delete_follow(self, user_id):
-        """Delete follow"""
+    def create_new_follow(self, user_id):
+        """Create a new follow"""
+        try:
+            new_follower = Follower(
+                user_id=self.current_user['id'],
+                follower_id=user_id
+            )
+            self.sess.add(new_follower)
+
+            self.sess.query(User).filter(
+                User.id == self.current_user['id']
+            ).first().followingcount += 1
+
+            self.sess.query(User).filter(
+                User.id == user_id
+            ).first().followerscount += 1
+
+            self.current_user['followingcount'] += 1
+            self.current_user['following'].append(user_id)
+
+            self.sess.commit()
+            return True
+        except Exception as e:
+            print("Error creating new follow: {}".format(e))
+            self.sess.rollback()
+        finally:
+            self.sess.close()
+
+    def delete_follow(self, user_id, user_to_follow):
+        """Delete a follow"""
+        try:
+            self.sess.delete(user_to_follow)
+
+            self.sess.query(User).filter(
+                User.id == self.current_user['id']
+            ).first().followingcount -= 1
+
+            self.sess.query(User).filter(
+                User.id == user_id
+            ).first().followerscount -= 1
+
+            self.current_user['followingcount'] -= 1
+            self.current_user['following'].remove(user_id)
+
+            self.sess.commit()
+            return True
+        finally:
+            self.sess.close()
+
+    def delete_all_follow_for_current_user(self, user_id):
+        """Delete all follows for the current user"""
         try:
             follow_data = self.sess.query(Follower).filter(
                 or_(
