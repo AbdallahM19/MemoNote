@@ -138,6 +138,31 @@ class Users():
         finally:
             self.sess.close()
 
+    def delete_account_complete(self):
+        """delete account complete function"""
+        try:
+            user_id = self.current_user['id']
+
+            self.sess.query(User).filter(
+                User.id == user_id
+            ).delete()
+
+            self.delete_follow(user_id)
+            # self.sess.query(Follower).filter(
+            #     or_(
+            #         Follower.user_id == user_id,
+            #         Follower.follower_id == user_id
+            #     )
+            # ).delete()
+
+            self.sess.commit()
+            return True
+        except Exception as e:
+            print(f"Error deleting account: {e}")
+            return False
+        finally:
+            self.sess.close()
+
     def check_if_user_exist(self, username, email):
         """check if user exist function"""
         user = self.sess.query(User).filter(
@@ -255,6 +280,39 @@ class Users():
         ).all()
         self.sess.close()
         return [f.follower_id for f in result] if result else []
+
+    def delete_follow(self, user_id):
+        """Delete follow"""
+        try:
+            follow_data = self.sess.query(Follower).filter(
+                or_(
+                    Follower.user_id == user_id,
+                    Follower.follower_id == user_id
+                )
+            ).all()
+
+            for follow in follow_data:
+                if follow.user_id == user_id:
+                    followed_user = self.sess.query(User).filter(
+                        User.id == follow.follower_id
+                    ).first()
+                    if followed_user:
+                        followed_user.followingcount = max(0, followed_user.followingcount - 1)
+                if follow.follower_id == user_id:
+                    following_user = self.sess.query(User).filter(
+                        User.id == follow.user_id
+                    ).first()
+                    if following_user:
+                        following_user.followerscount = max(0, following_user.followerscount - 1)
+                self.sess.delete(follow)
+
+            self.sess.commit()
+            return True
+        except Exception as e:
+            print("Error deleting follow: {}".format(e))
+            self.sess.rollback()
+        finally:
+            self.sess.close()
 
     # ----------------
 

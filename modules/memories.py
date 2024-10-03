@@ -86,6 +86,7 @@ class Memories():
             )
             self.sess.add(new_memory)
             self.sess.commit()
+            return new_memory.id, new_memory.type.lower()
         except Exception as e:
             print("error occurred while creating memory {}".format(e))
             self.sess.rollback()

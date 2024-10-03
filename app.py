@@ -416,7 +416,7 @@ def home_page():
         )
     elif request.method == 'POST':
         data = request.get_json()
-        memories_module.create_new_memory(
+        memory_id, memory_type = memories_module.create_new_memory(
             user_id = users_module.current_user['id'],
             title = data['title'] if data['title'] else datetime.now().strftime("%a %H:%M:%S %d:%m:%Y"),
             timestamp = datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
@@ -437,6 +437,10 @@ def home_page():
                 }
             ]
         )
+
+        users_module.current_user['memories'][memory_type].append(memory_id)
+        save_current_user_data_in_session()
+
         return jsonify({'message': 'True'})
     elif request.method == 'DELETE':
         return jsonify({'message': 'Home Page - DELETE'})
@@ -593,6 +597,32 @@ def register():
         session['session_id'] = new_user['session_id']
 
         return jsonify({'message': 'Register successful'}), 201
+    except Exception as e:
+        print("Error occurred:", str(e))
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/delete-account')
+@load_user
+def delete_account():
+    """delete account"""
+    try:
+        memories = users_module.current_user['memories']
+
+        for k, v in memories.items():
+            for m_id in v:
+                if k == 'liked':
+                    users_module.delete_like(m_id)
+                else:
+                    memories_module.delete_memory(m_id)
+                # print("{}".format(m_id))
+
+        # return jsonify(users_module.current_user)
+
+        users_module.delete_account_complete()
+        session.clear()
+        users_module.current_user = {}
+        return redirect(url_for('register'))
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({'error': str(e)}), 500
